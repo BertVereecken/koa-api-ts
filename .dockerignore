@@ -1,0 +1,19 @@
+# GIT
+.git
+.gitignore
+
+# Build
+dist/
+
+# Logs
+*.log
+
+# DS
+.DS_Store
+
+# Random
+node_modules
+*Dockerfile*
+.dockerignore
+*docker-compose*
+.editorconfig

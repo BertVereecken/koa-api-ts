@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "ES2019", // TODO find out if this shouldn't be ES2019
+    "removeComments": true,
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "lib": ["ES6"], // TODO find out if this shouldn't be ES2019
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "build"]
+}

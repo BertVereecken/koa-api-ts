@@ -1,0 +1,16 @@
+node_modules
+errors.log
+npm-debug.log
+yarn-error.log
+*.log
+*.env
+.eslintcache
+config
+db-data
+dist
+
+# OS
+.DS_Store
+
+# Editors
+.vscode
