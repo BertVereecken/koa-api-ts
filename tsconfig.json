@@ -9,7 +9,9 @@
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "lib": ["ES6"], // TODO find out if this shouldn't be ES2019
   "include": ["src/**/*"],

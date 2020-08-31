@@ -18,9 +18,9 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=admin
       - POSTGRES_DB=test
-      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
   adminer:
     image: adminer
     restart: always
