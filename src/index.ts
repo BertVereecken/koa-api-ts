@@ -31,6 +31,12 @@ const main = async () => {
   //   })
   //   .catch((err) => logger.error(err));
 
+  try {
+    await createConnection();
+  } catch (err) {
+    console.log(err);
+  }
+
   const app = express();
 
   const apolloServer = new ApolloServer({
@@ -43,7 +49,7 @@ const main = async () => {
   apolloServer.applyMiddleware({ app });
 
   app.listen(process.env.PORT || 3000, () =>
-    logger.info(`Server listing on port ${process.env.PORT}`),
+    logger.info(`Server is listening on port ${process.env.PORT}`),
   );
 };
 

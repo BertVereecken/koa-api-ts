@@ -10,6 +10,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      - PGHOST=postgres
+      - PGPASSWORD=postgres
+      - PGUSER=postgres
+      - PGDATABASE=test
+      - PGPORT=5432
     volumes:
       - .:/app
 
@@ -23,10 +29,10 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - DATABASE_URL=postgres://postgres:postgres@db/test
-    ports: 
+    ports:
       - 5432:5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
