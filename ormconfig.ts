@@ -12,4 +12,5 @@ const config: ConnectionOptions = {
   entities: ['src/entities/*.ts'],
 };
 
+// Needs to be exported like this
 export = config;

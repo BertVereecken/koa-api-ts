@@ -7,41 +7,24 @@ import { buildSchema } from 'type-graphql';
 import { HelloResolver } from './graphql/resolvers/hello';
 import { winstonLogger } from './core';
 import { createConnection } from 'typeorm';
-import { Todo } from './entities/Todo';
+import { TodoResolver } from './graphql/resolvers/todo';
 
 const logger = winstonLogger('server');
 
 const main = async () => {
   logger.info('Initializing app...');
 
-  // const connection = await createConnection({
-  //   type: 'postgres',
-  //   database: 'test',
-  //   host: 'localhost',
-  //   port: 5432,
-  //   username: 'postgres',
-  //   password: 'postgres',
-  //   logging: true,
-  //   // TODO: enable symchronize only in dev
-  //   synchronize: true,
-  //   entities: [Todo],
-  // })
-  //   .then((connection) => {
-  //     console.log('connection', connection);
-  //   })
-  //   .catch((err) => logger.error(err));
-
   try {
     await createConnection();
   } catch (err) {
-    console.log(err);
+    logger.error(err);
   }
 
   const app = express();
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [HelloResolver, TodoResolver],
       validate: false,
     }),
   });

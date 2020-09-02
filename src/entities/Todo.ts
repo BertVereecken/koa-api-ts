@@ -12,8 +12,8 @@ import { ObjectType, Field } from 'type-graphql';
 @Entity()
 export class Todo extends BaseEntity {
   @Field()
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Field(() => String)
   @Column()
