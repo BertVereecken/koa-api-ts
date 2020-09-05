@@ -7,23 +7,29 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
+// TODO: Fix this import/export later
+import { Common } from './User';
 
 @ObjectType()
 @Entity()
-export class Todo extends BaseEntity {
+export class Todo extends Common {
   @Field()
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  id: string;
 
   @Field(() => String)
   @Column()
-  title!: string;
+  title: string;
+
+  @Field(() => Boolean)
+  @Column()
+  completed: boolean;
 
   @Field(() => String)
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 
   @Field(() => String)
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt: Date;
 }

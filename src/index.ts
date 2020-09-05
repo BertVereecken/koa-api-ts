@@ -24,6 +24,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
+      // TODO: add resolvers via a better way instead of manually
       resolvers: [HelloResolver, TodoResolver],
       validate: false,
     }),
