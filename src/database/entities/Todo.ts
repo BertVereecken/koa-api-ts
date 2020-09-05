@@ -4,11 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  BaseEntity,
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
-// TODO: Fix this import/export later
-import { Common } from './User';
+import { Common } from '../common';
 
 @ObjectType()
 @Entity()

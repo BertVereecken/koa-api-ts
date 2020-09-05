@@ -4,10 +4,9 @@ dotenv.config();
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
-import { HelloResolver } from './graphql/resolvers/hello';
 import { winstonLogger } from './core';
 import { createConnection } from 'typeorm';
-import { TodoResolver } from './graphql/resolvers/todo';
+import { TodoResolver, UserResolver } from './graphql';
 
 const logger = winstonLogger('server');
 
@@ -25,7 +24,7 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       // TODO: add resolvers via a better way instead of manually
-      resolvers: [HelloResolver, TodoResolver],
+      resolvers: [TodoResolver, UserResolver],
       validate: false,
     }),
   });

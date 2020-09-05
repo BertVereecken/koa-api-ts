@@ -9,7 +9,7 @@ const config: ConnectionOptions = {
   database: 'test',
   logging: true,
   synchronize: true,
-  entities: ['src/entities/*.ts'],
+  entities: ['src/database/entities/*.ts'],
 };
 
 // Needs to be exported like this
