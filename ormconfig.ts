@@ -10,6 +10,7 @@ const config: ConnectionOptions = {
   logging: true,
   synchronize: true,
   entities: ['src/database/entities/*.ts'],
+  // TODO: add migrations here
 };
 
 // Needs to be exported like this

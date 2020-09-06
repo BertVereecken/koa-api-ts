@@ -10,13 +10,18 @@ import { TodoResolver, UserResolver } from './graphql';
 
 const logger = winstonLogger('server');
 
+// make seperate function for middleware
+// use CORS
+// add helmet
+// add SIGINT, SIGKILL, SIGTERM to cleanly quit docker
+
 const main = async () => {
   logger.info('Initializing app...');
 
   try {
     await createConnection();
   } catch (err) {
-    logger.error(err);
+    logger.error(`Error while creating connection ${err}`);
   }
 
   const app = express();

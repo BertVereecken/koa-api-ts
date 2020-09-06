@@ -1,1 +1,2 @@
-export { winstonLogger } from './logging';
+export * from './logging';
+export * from './auth';

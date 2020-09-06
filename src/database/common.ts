@@ -1,9 +1,9 @@
 import { BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, ID } from 'type-graphql';
 
 @ObjectType()
 export abstract class Common extends BaseEntity {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
