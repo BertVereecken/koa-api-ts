@@ -15,7 +15,7 @@
     "strictPropertyInitialization": false,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "resolveJsonModule": true
   },
   "lib": ["ES6"], // TODO find out if this shouldn't be ES2019

@@ -1,1 +1,1 @@
-export { winstonLogger } from './winston';
+export * from './winston';
