@@ -5,6 +5,7 @@ import { winstonLogger, installApolloServer } from './core';
 import { createConnection } from 'typeorm';
 import koa from 'koa';
 import helmet from 'koa-helmet';
+import http from 'http';
 
 const logger = winstonLogger('server');
 
@@ -19,6 +20,7 @@ const logger = winstonLogger('server');
   }
 
   const app = new koa();
+
   // wrapper against 11 smaller middlewares that helps to protect your API
   app.use(helmet());
   // TODO: maybe add CORS ?
@@ -30,43 +32,41 @@ const logger = winstonLogger('server');
     throw err;
   }
 
-  app.listen(process.env.PORT || 3000, () =>
-    logger.info(`Server is listening on port ${process.env.PORT}`),
-  );
+  const server = http.createServer(app.callback()).listen(process.env.PORT || 3000, () => {
+    logger.info(`Server is listening on port ${process.env.PORT}`);
+  });
 
   // // Graceful shutdown of the server
-  // const shutdown = (): void => {
-  //   logger.info('Starting shutdown of server...');
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   // @ts-ignore
-  //   app.close((err) => {
-  //     if (err) {
-  //       logger.error(`Could not gracefully close server: `, err);
-  //       process.exitCode = 1;
-  //     }
-  //     process.exit();
-  //   });
-  // };
+  const shutdown = (): void => {
+    logger.info('Starting shutdown of server...');
+    server.close((err) => {
+      if (err) {
+        logger.error(`Could not gracefully close server: `, err);
+        process.exitCode = 1;
+      }
+      process.exit();
+    });
+  };
 
-  // // SIGINT signal (CTRL-C)
-  // process.on('SIGINT', () => {
-  //   logger.warn('Received SIGINT signal');
-  //   shutdown();
-  // });
+  // SIGINT signal (CTRL-C)
+  process.on('SIGINT', () => {
+    logger.warn('Received SIGINT signal');
+    shutdown();
+  });
 
-  // // SIGTERM signal (Docker stop)
-  // process.on('SIGTERM', () => {
-  //   logger.warn('Received SIGTERM signal');
-  //   shutdown();
-  // });
+  // SIGTERM signal (Docker stop)
+  process.on('SIGTERM', () => {
+    logger.warn('Received SIGTERM signal');
+    shutdown();
+  });
 
-  // process.on('uncaughtException', (error) => {
-  //   logger.error('Uncaught exception: ', error);
-  //   shutdown();
-  // });
+  process.on('uncaughtException', (error) => {
+    logger.error('Uncaught exception: ', error);
+    shutdown();
+  });
 
-  // process.on('unhandledRejection', (reason, promise) => {
-  //   logger.error('Unhandled rejection: ', JSON.stringify(reason), promise);
-  //   shutdown();
-  // });
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled rejection: ', JSON.stringify(reason), promise);
+    shutdown();
+  });
 })();
