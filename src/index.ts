@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 dotenv.config();
-import express from 'express';
 import { winstonLogger, installApolloServer } from './core';
 import { createConnection } from 'typeorm';
-import helmet from 'helmet';
+import koa from 'koa';
+import helmet from 'koa-helmet';
 
 const logger = winstonLogger('server');
 
@@ -18,14 +18,9 @@ const logger = winstonLogger('server');
     throw err;
   }
 
-  const app = express();
-
+  const app = new koa();
   // wrapper against 11 smaller middlewares that helps to protect your API
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-    }),
-  );
+  app.use(helmet());
   // TODO: maybe add CORS ?
   logger.info('Installing apolloServer...');
   try {
