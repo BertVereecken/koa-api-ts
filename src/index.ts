@@ -33,7 +33,7 @@ const logger = winstonLogger('server');
   }
 
   const server = http.createServer(app.callback()).listen(process.env.PORT || 3000, () => {
-    logger.info(`Server is listening on port ${process.env.PORT}`);
+    logger.info(`Server is listening on ${process.env.HOST}${process.env.PORT}/graphql`);
   });
 
   // // Graceful shutdown of the server
@@ -57,11 +57,6 @@ const logger = winstonLogger('server');
   // SIGTERM signal (Docker stop)
   process.on('SIGTERM', () => {
     logger.warn('Received SIGTERM signal');
-    shutdown();
-  });
-
-  process.on('uncaughtException', (error) => {
-    logger.error('Uncaught exception: ', error);
     shutdown();
   });
 

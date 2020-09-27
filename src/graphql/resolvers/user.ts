@@ -1,6 +1,16 @@
-import { Resolver, Arg, Mutation } from 'type-graphql';
+import { Resolver, Arg, Mutation, Ctx } from 'type-graphql';
 import { User, Role } from '../../database';
-import { generateHash, generateToken, comparePassword, winstonLogger } from '../../core';
+import {
+  generateHash,
+  generateToken,
+  comparePassword,
+  winstonLogger,
+  validateArgs,
+  NotFoundError,
+} from '../../core';
+import Joi from '@hapi/joi';
+import { getUserByEmail } from '../../services';
+import { Context } from 'koa';
 
 const logger = winstonLogger('userResolver');
 
@@ -11,18 +21,39 @@ export class UserResolver {
     @Arg('email') email: string,
     @Arg('password') password: string,
     @Arg('role', { nullable: true }) role: Role = Role.USER,
+    @Ctx() ctx: Context,
   ): Promise<string | undefined> {
+    const schema = Joi.object({
+      email: Joi.string().email().min(10).max(150),
+      password: Joi.string().min(10),
+      role: Joi.string().valid(Role.ADMIN, Role.USER),
+    });
+
     try {
+      // validate user input
+      await validateArgs({ email, password, role }, schema);
+
+      console.log('context', ctx);
+      // check if user already exists in the DB
+      const user = await getUserByEmail(email);
+
+      if (user) {
+        throw new Error(`User with email: ${email} already exists`);
+      }
+
+      // hash the password
       const hashedPassword = await generateHash(password);
 
-      // TODO: Validate email (unique) and password
+      // create the user when validation and password hashing is successful
       const createdUser = await User.create({ email, password: hashedPassword, role }).save();
 
+      // create a JWT token when user is created
       const token = generateToken({ userId: createdUser.id, role: createdUser.role });
 
       return token;
     } catch (err) {
       logger.error(`Something went wrong while registering: ${err}`);
+      throw err;
     }
   }
 
@@ -31,10 +62,17 @@ export class UserResolver {
     @Arg('email') email: string,
     @Arg('password') password: string,
   ): Promise<string | undefined> {
-    try {
-      const user = await User.findOne({ email });
+    const schema = Joi.object({
+      email: Joi.string().email().min(10).max(150),
+      password: Joi.string().min(10),
+    });
 
-      if (!user) throw new Error('USER_NOT_FOUND');
+    try {
+      await validateArgs({ email, password }, schema);
+
+      const user = await getUserByEmail(email);
+
+      if (!user) throw new NotFoundError(`User with email: ${email} not found`, 'USER_NOT_FOUND');
 
       const isPasswordValid = await comparePassword(password, user.password);
 
@@ -45,6 +83,7 @@ export class UserResolver {
       return token;
     } catch (err) {
       logger.error(`Something went wrong with the login: ${err}`);
+      throw err;
     }
   }
 }
