@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { Context } from 'koa';
 import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import { NotFoundError, validateArgs, winstonLogger } from '../../core';
 import { Todo } from '../../database';
@@ -9,8 +8,7 @@ const logger = winstonLogger('Todo resolver');
 @Resolver()
 export class TodoResolver {
   @Query(() => [Todo])
-  async todos(@Ctx() ctx: Context): Promise<Todo[] | null> {
-    console.log('context in todos', ctx);
+  async todos(): Promise<Todo[] | null> {
     return Todo.find();
   }
 
@@ -27,7 +25,7 @@ export class TodoResolver {
   ): Promise<Todo | undefined> {
     const schema = Joi.object({
       title: Joi.string().min(2).max(200),
-      completed: Joi.boolean(),
+      completed: Joi.boolean().optional(),
     });
 
     try {
@@ -57,9 +55,34 @@ export class TodoResolver {
       await Todo.update({ id }, { ...toUpdate });
 
       const updatedTodo = await Todo.findOne(id);
+
       return updatedTodo;
     } catch (err) {
-      logger.error(err);
+      logger.error(`Something went wrong while updating the todo: ${err}`);
+      throw err;
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async deleteTodo(@Arg('id') id: string): Promise<boolean> {
+    const schema = Joi.object({
+      id: Joi.string().uuid(),
+    });
+
+    try {
+      await validateArgs({ id }, schema);
+
+      const todo = await Todo.findOne(id);
+
+      if (!todo) {
+        throw new NotFoundError(`Todo with id: ${id} could not be deleted`, 'TODO_NOT_FOUND');
+      }
+
+      await Todo.delete(id);
+
+      return true;
+    } catch (err) {
+      logger.error(`Something went wrong while deleting the todo: ${err}`);
       throw err;
     }
   }

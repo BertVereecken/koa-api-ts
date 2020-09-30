@@ -1,4 +1,4 @@
-import { Resolver, Arg, Mutation, Ctx } from 'type-graphql';
+import { Resolver, Arg, Mutation } from 'type-graphql';
 import { User, Role } from '../../database';
 import {
   generateHash,
@@ -10,7 +10,6 @@ import {
 } from '../../core';
 import Joi from '@hapi/joi';
 import { getUserByEmail } from '../../services';
-import { Context } from 'koa';
 
 const logger = winstonLogger('userResolver');
 
@@ -21,7 +20,6 @@ export class UserResolver {
     @Arg('email') email: string,
     @Arg('password') password: string,
     @Arg('role', { nullable: true }) role: Role = Role.USER,
-    @Ctx() ctx: Context,
   ): Promise<string | undefined> {
     const schema = Joi.object({
       email: Joi.string().email().min(10).max(150),
@@ -33,7 +31,6 @@ export class UserResolver {
       // validate user input
       await validateArgs({ email, password, role }, schema);
 
-      console.log('context', ctx);
       // check if user already exists in the DB
       const user = await getUserByEmail(email);
 
@@ -82,7 +79,7 @@ export class UserResolver {
 
       return token;
     } catch (err) {
-      logger.error(`Something went wrong with the login: ${err}`);
+      logger.error(`Something went wrong while logging in: ${err}`);
       throw err;
     }
   }
