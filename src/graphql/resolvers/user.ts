@@ -20,6 +20,7 @@ export class UserResolver {
   async register(
     @Arg('email') email: string,
     @Arg('password') password: string,
+    // TODO: check if we can omit setting a default value hre because we have a default value set in the DB.
     @Arg('role', { nullable: true }) role: Role = Role.USER,
   ): Promise<string | undefined> {
     const schema = Joi.object({

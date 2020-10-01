@@ -8,9 +8,13 @@ const config: ConnectionOptions = {
   password: 'postgres',
   database: 'test',
   logging: true,
-  synchronize: true,
+  synchronize: false,
   entities: ['src/database/entities/*.ts'],
-  // TODO: add migrations here
+  migrations: ['src/database/migrations/*.ts'],
+  migrationsRun: true,
+  cli: {
+    migrationsDir: 'src/database/migrations',
+  },
 };
 
 // Needs to be exported like this
