@@ -10,6 +10,7 @@ import {
 } from '../../core';
 import Joi from '@hapi/joi';
 import { getUserByEmail } from '../../services';
+import { AuthenticationError } from 'apollo-server-koa';
 
 const logger = winstonLogger('userResolver');
 
@@ -35,7 +36,7 @@ export class UserResolver {
       const user = await getUserByEmail(email);
 
       if (user) {
-        throw new Error(`User with email: ${email} already exists`);
+        throw new AuthenticationError(`User with email: ${email} already exists`);
       }
 
       // hash the password
@@ -73,7 +74,7 @@ export class UserResolver {
 
       const isPasswordValid = await comparePassword(password, user.password);
 
-      if (!isPasswordValid) throw new Error('Wrong credentials');
+      if (!isPasswordValid) throw new AuthenticationError('Wrong credentials');
 
       const token = generateToken({ userId: user.id, role: user.role });
 
