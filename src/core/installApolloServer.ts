@@ -1,4 +1,4 @@
-import { ApolloServer, AuthenticationError } from 'apollo-server-koa';
+import { ApolloServer } from 'apollo-server-koa';
 import { buildSchema } from 'type-graphql';
 import { TodoResolver, UserResolver } from '../graphql';
 import Koa, { Context } from 'koa';
@@ -15,21 +15,6 @@ const installApolloServer = async (app: Koa): Promise<void> => {
     }),
     context: returnKoaContext,
   });
-
-  // const bool = false;
-  // app.use(async (ctx, next) => {
-  //   try {
-  //     if (bool) {
-  //       console.log('de boolean is is true hahah');
-  //     } else {
-  //       throw new AuthenticationError('Not authenticated');
-  //     }
-  //   } catch (err) {
-  //     console.log('we zijn in de error');
-  //     throw err;
-  //   }
-  //   return next();
-  // });
 
   apolloServer.applyMiddleware({ app });
 };

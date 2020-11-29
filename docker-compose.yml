@@ -38,13 +38,5 @@ services:
       timeout: 5s
       retries: 5
 
-  adminer:
-    image: adminer
-    restart: always
-    depends_on:
-      - db
-    ports:
-      - 8090:8090
-
 volumes:
   db-data:

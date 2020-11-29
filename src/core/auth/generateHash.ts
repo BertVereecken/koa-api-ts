@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server-koa';
 import { hash, compare } from 'bcryptjs';
 const saltRounds = 12;
 
@@ -6,7 +7,7 @@ export const generateHash = async (unhashedPassword: string): Promise<string> =>
 
   // TODO: custom error handling
   if (!hashedPassword) {
-    throw new Error('COULD_NOT_HASH_PASSWORD');
+    throw new AuthenticationError('COULD_NOT_HASH_PASSWORD');
   }
 
   return hashedPassword;
@@ -20,7 +21,7 @@ export const comparePassword = async (
 
   // TODO: custom error handling
   if (!isPasswordValid) {
-    throw new Error('PASSWORD_IS_INVALID');
+    throw new AuthenticationError('PASSWORD_IS_INVALID');
   }
   return isPasswordValid;
 };
