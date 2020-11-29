@@ -10,7 +10,7 @@ export const generateToken = ({ userId, role }: User): string => {
     expiresIn: '2 days', // 2 days
   };
 
-  const token = sign({ userId, role }, tokenSecret as string, tokenOptions);
+  const token = sign({ userId, roles: [role] }, tokenSecret as string, tokenOptions);
 
   if (!token) {
     throw new Error('Something went wrong generating the token');
@@ -28,10 +28,11 @@ export const decodeToken = (jwtToken: string): Payload => {
 
   const payload = verify(jwtToken, tokenSecret as string);
 
+  console.log('payload', payload);
   if (!payload) {
     throw new Error('Something went wrong decoding the token');
   }
   const { roles, userId } = payload as Payload;
 
-  return { userId, roles };
+  return { roles, userId };
 };

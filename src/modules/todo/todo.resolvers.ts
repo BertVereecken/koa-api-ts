@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { Resolver, Query, Mutation, Arg } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, Authorized } from 'type-graphql';
 import { NotFoundError, validateArgs, winstonLogger } from '../../common';
 import { Todo } from './todo.model';
 
@@ -7,6 +7,7 @@ const logger = winstonLogger('Todo resolver');
 
 @Resolver()
 export class TodoResolver {
+  @Authorized('user')
   @Query(() => [Todo])
   async todos(): Promise<Todo[] | null> {
     return Todo.find();
