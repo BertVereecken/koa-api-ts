@@ -1,5 +1,5 @@
 import { verify, sign } from 'jsonwebtoken';
-import type { Payload, User } from '../types';
+import { Payload, User } from '../types';
 
 export const generateToken = ({ userId, role }: User): string => {
   if (!userId || !role) throw new Error('COULD_SIGN_TOKEN');
