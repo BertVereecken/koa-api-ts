@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 dotenv.config();
-import { winstonLogger, installApolloServer } from './core';
 import { createConnection } from 'typeorm';
 import koa from 'koa';
 import helmet from 'koa-helmet';
 import http from 'http';
+import { winstonLogger, installApolloServer } from './common';
 
 const logger = winstonLogger('server');
 

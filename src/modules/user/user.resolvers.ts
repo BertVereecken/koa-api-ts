@@ -1,5 +1,4 @@
 import { Resolver, Arg, Mutation } from 'type-graphql';
-import { User, Role } from '../../database';
 import {
   generateHash,
   generateToken,
@@ -7,10 +6,12 @@ import {
   winstonLogger,
   validateArgs,
   NotFoundError,
-} from '../../core';
+  Role,
+} from '../../common';
 import Joi from '@hapi/joi';
-import { getUserByEmail } from '../../services';
 import { AuthenticationError } from 'apollo-server-koa';
+import { User } from './user.model';
+import { getUserByEmail } from './user.services';
 
 const logger = winstonLogger('userResolver');
 

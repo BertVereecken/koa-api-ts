@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server-koa';
 import { buildSchema } from 'type-graphql';
-import { TodoResolver, UserResolver } from '../graphql';
 import Koa, { Context } from 'koa';
+import { TodoResolver, UserResolver } from '../modules';
 
 // pass the koa context to the GraphQL context
 const returnKoaContext = ({ ctx }: { ctx: Context }) => ctx;

@@ -2,7 +2,7 @@ import { BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn 
 import { Field, ObjectType, ID } from 'type-graphql';
 
 @ObjectType()
-export abstract class Common extends BaseEntity {
+export abstract class BasicModel extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -14,9 +14,4 @@ export abstract class Common extends BaseEntity {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
-}
-
-export enum Role {
-  ADMIN = 'admin',
-  USER = 'user',
 }

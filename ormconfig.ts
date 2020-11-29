@@ -9,11 +9,11 @@ const config: ConnectionOptions = {
   database: 'test',
   logging: true,
   synchronize: false,
-  entities: ['src/database/entities/*.ts'],
-  migrations: ['src/database/migrations/*.ts'],
+  entities: ['src/modules/*/*.model.ts'],
+  migrations: ['src/common/migrations/*.ts'],
   migrationsRun: true,
   cli: {
-    migrationsDir: 'src/database/migrations',
+    migrationsDir: 'src/common/migrations',
   },
 };
 

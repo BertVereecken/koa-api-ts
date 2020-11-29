@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
-import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
-import { NotFoundError, validateArgs, winstonLogger } from '../../core';
-import { Todo } from '../../database';
+import { Resolver, Query, Mutation, Arg } from 'type-graphql';
+import { NotFoundError, validateArgs, winstonLogger } from '../../common';
+import { Todo } from './todo.model';
 
 const logger = winstonLogger('Todo resolver');
 

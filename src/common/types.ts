@@ -1,4 +1,4 @@
-import { Role } from '../database';
+import { Role } from './enums';
 
 export interface User {
   userId: string;

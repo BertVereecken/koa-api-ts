@@ -1,10 +1,11 @@
 import { ObjectType, Field } from 'type-graphql';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { Common, Role } from '../common';
+import { Role } from '../../common';
+import { BasicModel } from '../basicModel';
 
 @ObjectType()
 @Entity()
-export class User extends Common {
+export class User extends BasicModel {
   @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;

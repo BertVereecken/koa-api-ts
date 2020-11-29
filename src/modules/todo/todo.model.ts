@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
-import { Common } from '../common';
+import { BasicModel } from '../basicModel';
 
 @ObjectType()
 @Entity()
-export class Todo extends Common {
+export class Todo extends BasicModel {
   @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
