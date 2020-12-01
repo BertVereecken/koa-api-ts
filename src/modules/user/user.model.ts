@@ -7,10 +7,6 @@ import { BasicModel } from '../basicModel';
 @Entity()
 export class User extends BasicModel {
   @Field()
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Field()
   @Column()
   email: string;
 

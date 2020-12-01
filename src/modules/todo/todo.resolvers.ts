@@ -1,23 +1,25 @@
 import Joi from '@hapi/joi';
 import { Resolver, Query, Mutation, Arg, Authorized } from 'type-graphql';
-import { NotFoundError, validateArgs, winstonLogger } from '../../common';
+import { NotFoundError, Role, validateArgs, winstonLogger } from '../../common';
 import { Todo } from './todo.model';
 
 const logger = winstonLogger('Todo resolver');
 
 @Resolver()
 export class TodoResolver {
-  @Authorized('user')
+  @Authorized(Role.USER)
   @Query(() => [Todo])
   async todos(): Promise<Todo[] | null> {
     return Todo.find();
   }
 
+  @Authorized(Role.USER)
   @Mutation(() => Todo)
   async createTodo(@Arg('title') title: string): Promise<Todo> {
     return Todo.create({ title, completed: false }).save();
   }
 
+  @Authorized(Role.USER)
   @Mutation(() => Todo, { nullable: true })
   async updateTodo(
     @Arg('id') id: string,
@@ -37,7 +39,6 @@ export class TodoResolver {
       if (!todo) {
         throw new NotFoundError(`Todo with id: ${id} could not be found`, 'TODO_NOT_FOUND');
       }
-
       interface toUpdate {
         title?: string;
         completed?: boolean;
@@ -64,6 +65,7 @@ export class TodoResolver {
     }
   }
 
+  @Authorized(Role.USER)
   @Mutation(() => Boolean)
   async deleteTodo(@Arg('id') id: string): Promise<boolean> {
     const schema = Joi.object({

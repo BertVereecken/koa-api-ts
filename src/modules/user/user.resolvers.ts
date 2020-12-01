@@ -1,4 +1,4 @@
-import { Resolver, Arg, Mutation } from 'type-graphql';
+import { Resolver, Arg, Mutation, Authorized } from 'type-graphql';
 import {
   generateHash,
   generateToken,
@@ -11,7 +11,7 @@ import {
 import Joi from '@hapi/joi';
 import { AuthenticationError } from 'apollo-server-koa';
 import { User } from './user.model';
-import { getUserByEmail } from './user.services';
+import { getUserByEmail, getUserById, getUserRole } from './user.services';
 
 const logger = winstonLogger('userResolver');
 
@@ -83,6 +83,35 @@ export class UserResolver {
       return token;
     } catch (err) {
       logger.error(`Something went wrong while logging in: ${err}`);
+      throw err;
+    }
+  }
+
+  @Authorized(Role.ADMIN)
+  @Mutation(() => Boolean)
+  async updateUser(@Arg('id') id: string, @Arg('newEmail') newEmail: string): Promise<boolean> {
+    const schema = Joi.object({
+      id: Joi.string().uuid(),
+      newEmail: Joi.string().email().min(10).max(150),
+    });
+
+    try {
+      await validateArgs({ id, newEmail }, schema);
+
+      const user = await getUserById(id);
+
+      if (!user) throw new NotFoundError(`User with id: ${id} not found`, 'USER_NOT_FOUND');
+
+      const roleOfUser = await getUserRole(id);
+
+      // TODO: improve error here
+      if (roleOfUser === Role.ADMIN) throw new Error('Not possible to edit another admin');
+
+      await User.update({ id }, { email: newEmail });
+
+      return true;
+    } catch (err) {
+      logger.error(`Something went wrong while updating the user: ${err}`);
       throw err;
     }
   }
