@@ -7,19 +7,19 @@ const logger = winstonLogger('Todo resolver');
 
 @Resolver()
 export class TodoResolver {
-  @Authorized(Role.USER)
+  @Authorized('user')
   @Query(() => [Todo])
   async todos(): Promise<Todo[] | null> {
     return Todo.find();
   }
 
-  @Authorized(Role.USER)
+  @Authorized('user')
   @Mutation(() => Todo)
   async createTodo(@Arg('title') title: string): Promise<Todo> {
     return Todo.create({ title, completed: false }).save();
   }
 
-  @Authorized(Role.USER)
+  @Authorized('user')
   @Mutation(() => Todo, { nullable: true })
   async updateTodo(
     @Arg('id') id: string,
@@ -65,7 +65,7 @@ export class TodoResolver {
     }
   }
 
-  @Authorized(Role.USER)
+  @Authorized('user')
   @Mutation(() => Boolean)
   async deleteTodo(@Arg('id') id: string): Promise<boolean> {
     const schema = Joi.object({

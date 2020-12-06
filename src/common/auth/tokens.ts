@@ -28,7 +28,6 @@ export const decodeToken = (jwtToken: string): Payload => {
 
   const payload = verify(jwtToken, tokenSecret as string);
 
-  console.log('payload', payload);
   if (!payload) {
     throw new Error('Something went wrong decoding the token');
   }
