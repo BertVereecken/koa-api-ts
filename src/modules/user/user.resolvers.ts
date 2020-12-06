@@ -14,6 +14,10 @@ import { User } from './user.model';
 import { getUserByEmail, getUserById, getUserRole } from './user.services';
 
 const logger = winstonLogger('userResolver');
+
+// TODO: Store this in config
+const MAX_BAD_LOGIN_ATTEMPTS = 3;
+const LOGIN_ATTEMPTS_LOCK_TIME = 60 * 30 * 1000; // 30 minutes in milliseconds
 @Resolver()
 export class UserResolver {
   @Mutation(() => String)
@@ -59,6 +63,7 @@ export class UserResolver {
       email: Joi.string().email().min(10).max(150),
       password: Joi.string().min(10),
     });
+    const now = new Date().getTime();
 
     try {
       await validateArgs({ email, password }, schema);
@@ -67,7 +72,27 @@ export class UserResolver {
 
       if (!user) throw new NotFoundError(`User with email: ${email} not found`, 'USER_NOT_FOUND');
 
-      await comparePassword(password, user.password);
+      // TODO: what after 3 bad attempts, and the 4th one also bad ... ?
+      if (
+        user.badLoginAttempts >= MAX_BAD_LOGIN_ATTEMPTS &&
+        now - user.lastBadLoginAttempt <= LOGIN_ATTEMPTS_LOCK_TIME
+      ) {
+        // TODO: make general error
+        throw new Error('account locked');
+      }
+
+      const isPasswordValid = await comparePassword(password, user.password);
+
+      if (!isPasswordValid) {
+        await User.update(
+          { id: user.id },
+          { lastBadLoginAttempt: now, badLoginAttempts: user.badLoginAttempts + 1 },
+        );
+        throw new AuthenticationError('Wrong credentials');
+      }
+
+      // reset bad login attempts
+      await User.update({ id: user.id }, { badLoginAttempts: 0 });
 
       const token = generateToken({ userId: user.id, role: user.role });
 

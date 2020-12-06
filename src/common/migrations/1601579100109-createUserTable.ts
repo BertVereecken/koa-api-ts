@@ -31,6 +31,17 @@ export class createUserTable1601579100109 implements MigrationInterface {
             default: "'user'",
           },
           {
+            name: 'badLoginAttempts',
+            type: 'smallint',
+            default: 0,
+          },
+          {
+            name: 'lastBadLoginAttempt',
+            type: 'bigint',
+            default: null,
+            isNullable: true,
+          },
+          {
             name: 'createdAt',
             type: 'timestamp',
             default: 'now()',

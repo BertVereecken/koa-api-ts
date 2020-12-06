@@ -1,5 +1,5 @@
 import { ObjectType, Field } from 'type-graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { Role } from '../../common';
 import { BasicModel } from '../basicModel';
 
@@ -17,4 +17,12 @@ export class User extends BasicModel {
   @Field()
   @Column({ type: 'enum', enum: Role })
   role: Role;
+
+  @Field()
+  @Column({ type: 'smallint', default: 0 })
+  badLoginAttempts: number;
+
+  @Field()
+  @Column({ type: 'bigint', nullable: true })
+  lastBadLoginAttempt: number;
 }
